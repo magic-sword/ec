@@ -2,7 +2,6 @@ open Vg
 open Gg
 open Plotter
 open Cairo
-open Core;;
 
 type canvas = Plotter.canvas
 
