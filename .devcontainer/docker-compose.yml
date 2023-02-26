@@ -10,7 +10,7 @@ services:
       args:
         # root以外のユーザを作成する
         USERNAME: ${USERNAME:-dev}
-        GROUPNAME: ${GROUPNAME:-ev}
+        GROUPNAME: ${GROUPNAME:-dev}
         UID: ${UID:-1000}
         GID: ${GID:-1000}
 
