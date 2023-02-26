@@ -47,9 +47,10 @@ RUN opam switch create 4.06.1+flambda --yes
 RUN opam switch 4.06.1+flambda
 RUN eval `opam config env`
 
+# menhirはubuntu 20以降でエラーが発生するため、バージョンを指定してインストールする (https://github.com/ellisk42/ec/issues/96)
 RUN opam install depext --yes
-RUN opam depext ppx_jane core re2 yojson vg cairo2 camlimages menhir ocaml-protoc zmq --yes
-RUN opam install ppx_jane core re2 yojson vg cairo2 camlimages menhir ocaml-protoc zmq --yes
+RUN opam depext ppx_jane core re2 yojson vg cairo2 camlimages menhir.20211128 ocaml-protoc zmq --yes
+RUN opam install ppx_jane core re2 yojson vg cairo2 camlimages menhir.20211128 ocaml-protoc zmq --yes
 RUN eval $(opam env)
 
 # jbuilder clean    jbuilder: command not found
