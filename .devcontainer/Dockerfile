@@ -4,8 +4,21 @@ FROM nvcr.io/nvidia/pytorch:23.01-py3
 RUN apt update
 RUN apt install sudo
 
+# root以外のユーザを追加し、sudoをパスワードなしで実行可能にする
+ARG USERNAME=dev
+ARG GROUPNAME=dev
+ARG UID=1000
+ARG GID=1000
+ARG PASSWORD=user
+RUN groupadd -g $GID $GROUPNAME && \
+    useradd -m -s /bin/bash -u $UID -g $GID -G sudo $USERNAME && \
+    echo $USERNAME:$PASSWORD | chpasswd && \
+    echo "$USERNAME   ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+USER $USERNAME
+
 # software-properties-commonなどをインストール時にタイムゾーンを聞かれて停止するため、タイムゾーンをインストールしておく
-RUN DEBIAN_FRONTEND=noninteractive apt install -y tzdata
+# sudoでroot権限へ昇格するときに環境変数が引き継がれないので、sudoに-Eオプションを入れる
+RUN DEBIAN_FRONTEND=noninteractive sudo -E apt install -y tzdata
 
 # Getting Started -- Dependencies and Requirements
 RUN sudo apt install -y software-properties-common
@@ -34,6 +47,7 @@ RUN eval `opam config env`
 RUN opam install depext --yes
 RUN opam depext ppx_jane core re2 yojson vg cairo2 camlimages menhir ocaml-protoc zmq --yes
 RUN opam install ppx_jane core re2 yojson vg cairo2 camlimages menhir ocaml-protoc zmq --yes
+RUN eval `opam config env`
 
 # jbuilder clean    jbuilder: command not found
 

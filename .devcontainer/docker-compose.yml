@@ -7,6 +7,12 @@ services:
     build:
       context: ../
       dockerfile: .devcontainer/Dockerfile
+      args:
+        # root以外のユーザを作成する
+        USERNAME: ${USERNAME:-dev}
+        GROUPNAME: ${GROUPNAME:-ev}
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
 
     # コンテナを永続化して、消さないようにする
     command: /bin/sh -c "while sleep 1000; do :; done"
@@ -25,3 +31,5 @@ services:
             devices:
               # count か device_idsを指定せず、ホスト上で利用可能な GPU すべてを使用
               - capabilities: [gpu]
+    
+        
