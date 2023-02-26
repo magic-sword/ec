@@ -20,6 +20,9 @@ USER $USERNAME
 # sudoでroot権限へ昇格するときに環境変数が引き継がれないので、sudoに-Eオプションを入れる
 RUN DEBIAN_FRONTEND=noninteractive sudo -E apt install -y tzdata
 
+# root権限となってしまっているフォルダとファイルの権限を、再帰的に全て変更するコマンド
+# sudo chown -R dev:dev [filename/foldername]
+
 # Getting Started -- Dependencies and Requirements
 RUN sudo apt install -y software-properties-common
 RUN sudo add-apt-repository --yes ppa:deadsnakes/ppa
@@ -47,7 +50,7 @@ RUN eval `opam config env`
 RUN opam install depext --yes
 RUN opam depext ppx_jane core re2 yojson vg cairo2 camlimages menhir ocaml-protoc zmq --yes
 RUN opam install ppx_jane core re2 yojson vg cairo2 camlimages menhir ocaml-protoc zmq --yes
-RUN eval `opam config env`
+RUN eval $(opam env)
 
 # jbuilder clean    jbuilder: command not found
 
