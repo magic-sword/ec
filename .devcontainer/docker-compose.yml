@@ -1,0 +1,27 @@
+
+version: '3.7'
+
+services:
+  app:
+    # Dockerfileでビルドを実行
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+
+    # コンテナを永続化して、消さないようにする
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
+    # コンテナ接続時に開くワークスペースをマウント 
+    volumes:
+      - ../:/workspace
+    
+    env_file:
+      - .env
+
+    # GPUを追加する
+    deploy:
+        resources:
+          reservations:
+            devices:
+              # count か device_idsを指定せず、ホスト上で利用可能な GPU すべてを使用
+              - capabilities: [gpu]
